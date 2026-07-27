@@ -1,0 +1,20 @@
+{
+  "manifest_version": 3,
+  "name": "Amazon JP Orders Local Capture",
+  "version": "0.2.0",
+  "description": "Read the logged-in Amazon.co.jp order history page and send orders to the local dashboard receiver.",
+  "permissions": [
+    "activeTab",
+    "scripting",
+    "tabs"
+  ],
+  "host_permissions": [
+    "https://www.amazon.co.jp/*",
+    "http://127.0.0.1:8776/*",
+    "http://localhost:8776/*"
+  ],
+  "action": {
+    "default_title": "Amazon JP Orders",
+    "default_popup": "popup.html"
+  }
+}

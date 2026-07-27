@@ -1,0 +1,117 @@
+{
+  "source_url": "https://www.amazon.co.jp/gp/your-account/order-history?timeFilter=year-2026",
+  "since_date": "2026-01-01",
+  "orders": [
+    {
+      "order_id": "503-0000000-0000001",
+      "order_date": "2026-06-08",
+      "order_total_yen": 4911,
+      "detail_url": "https://www.amazon.co.jp/gp/your-account/order-details?orderID=503-0000000-0000001",
+      "items": [
+        {
+          "title": "【パンツ Lサイズ】 マミーポコ パンツ サンリオキャラクターズデザイン オムツ (9~15kg) 186枚",
+          "quantity": 1,
+          "item_price_yen": 4911,
+          "item_total_yen": 4911
+        }
+      ]
+    },
+    {
+      "order_id": "503-0000000-0000002",
+      "order_date": "2026-06-02",
+      "order_total_yen": 3394,
+      "detail_url": "https://www.amazon.co.jp/gp/your-account/order-details?orderID=503-0000000-0000002",
+      "items": [
+        {
+          "title": "令和7年産 玄米 2kg ヒノヒカリ",
+          "quantity": 1,
+          "item_price_yen": 1789,
+          "item_total_yen": 1789
+        },
+        {
+          "title": "オカモト コンドームズ ピュアマーガレット 12個入",
+          "quantity": 1,
+          "item_price_yen": 567,
+          "item_total_yen": 567
+        },
+        {
+          "title": "Club クラブ すっぴんクリームC パステルローズの香り30g",
+          "quantity": 1,
+          "item_price_yen": 1038,
+          "item_total_yen": 1038
+        }
+      ]
+    },
+    {
+      "order_id": "503-0000000-0000003",
+      "order_date": "2026-05-18",
+      "order_total_yen": 3980,
+      "detail_url": "https://www.amazon.co.jp/gp/your-account/order-details?orderID=503-0000000-0000003",
+      "items": [
+        {
+          "title": "USB-C 7-in-1 ハブ HDMI対応",
+          "quantity": 1,
+          "item_price_yen": 3980,
+          "item_total_yen": 3980
+        }
+      ]
+    },
+    {
+      "order_id": "503-0000000-0000004",
+      "order_date": "2026-04-12",
+      "order_total_yen": 3960,
+      "detail_url": "https://www.amazon.co.jp/gp/your-account/order-details?orderID=503-0000000-0000004",
+      "items": [
+        {
+          "title": "敏感肌用 日焼け止め 50ml",
+          "quantity": 2,
+          "item_price_yen": 1980,
+          "item_total_yen": 3960
+        }
+      ]
+    },
+    {
+      "order_id": "503-0000000-0000005",
+      "order_date": "2026-03-09",
+      "order_total_yen": 1760,
+      "detail_url": "https://www.amazon.co.jp/gp/your-account/order-details?orderID=503-0000000-0000005",
+      "items": [
+        {
+          "title": "キュキュット 食器用洗剤 詰め替えセット",
+          "quantity": 2,
+          "item_price_yen": 880,
+          "item_total_yen": 1760
+        }
+      ]
+    },
+    {
+      "order_id": "503-0000000-0000006",
+      "order_date": "2026-02-14",
+      "order_total_yen": 3200,
+      "detail_url": "https://www.amazon.co.jp/gp/your-account/order-details?orderID=503-0000000-0000006",
+      "items": [
+        {
+          "title": "こども向け 知育玩具 ブロックセット",
+          "quantity": 1,
+          "item_price_yen": 3200,
+          "item_total_yen": 3200
+        }
+      ]
+    },
+    {
+      "order_id": "503-0000000-0000007",
+      "order_date": "2026-01-23",
+      "order_total_yen": 2480,
+      "detail_url": "https://www.amazon.co.jp/gp/your-account/order-details?orderID=503-0000000-0000007",
+      "items": [
+        {
+          "title": "国産 お茶 ティーバッグ 100個",
+          "quantity": 1,
+          "item_price_yen": 2480,
+          "item_total_yen": 2480
+        }
+      ]
+    }
+  ],
+  "note": "sample_fixture"
+}

@@ -1,0 +1,11 @@
+[project]
+name = "amazon-jp-orders-dashboard"
+version = "0.2.0"
+description = "Privacy-first local spending dashboard for Amazon.co.jp order history"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+dependencies = []
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"

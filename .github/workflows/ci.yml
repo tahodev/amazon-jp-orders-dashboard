@@ -1,0 +1,31 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.10", "3.12", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install test runner
+        run: python -m pip install pytest
+      - name: Python tests
+        run: python -m pytest
+      - name: Chrome extension syntax
+        run: |
+          node --check chrome_extension/popup.js
+          node --check chrome_extension/batch.js
+          node --check chrome_extension/capture_core.js
+      - name: Public release safety scan
+        run: python scripts/check_public_release.py
