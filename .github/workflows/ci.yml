@@ -33,4 +33,6 @@ jobs:
         run: |
           python scripts/doctor.py
           python scripts/build_release.py
+          python scripts/build_webstore.py
           python -c "import zipfile; p=next(__import__('pathlib').Path('dist').glob('*.zip')); z=zipfile.ZipFile(p); assert not any('/data/' in n or '/.git/' in n for n in z.namelist()); print(p, len(z.namelist()), 'files')"
+          python -c "import zipfile; p=next(__import__('pathlib').Path('dist/chrome-web-store').glob('*.zip')); z=zipfile.ZipFile(p); assert 'manifest.json' in z.namelist(); assert not any(n.startswith('chrome_extension/') for n in z.namelist()); print(p, len(z.namelist()), 'files')"

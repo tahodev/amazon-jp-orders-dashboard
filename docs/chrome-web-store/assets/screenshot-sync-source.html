@@ -1,0 +1,15 @@
+<!doctype html>
+<html lang="ja"><head><meta charset="utf-8"><style>
+*{box-sizing:border-box}html,body{width:1280px;height:800px;margin:0;overflow:hidden;background:#f7f5ef}
+.dashboard{position:absolute;inset:0;width:1280px;height:800px;object-fit:cover}
+.popup-shell{position:absolute;right:38px;top:34px;width:368px;height:730px;padding:13px;background:#fff;border:1px solid #cfc8b9;box-shadow:0 18px 54px rgba(22,38,30,.28)}
+iframe{width:340px;height:702px;border:0;background:#fbfaf5}
+</style></head><body><img class="dashboard" src="../../assets/dashboard-demo.png" alt=""><div class="popup-shell"><iframe id="popup" name="popup" src="../../../chrome_extension/popup.html"></iframe></div><script>
+document.getElementById('popup').addEventListener('load', event => {
+  const doc = event.currentTarget.contentDocument;
+  doc.getElementById('health').textContent = 'ローカル受信サービス：接続済み';
+  doc.getElementById('since').value = '2026-07-14';
+  doc.getElementById('until').value = '2026-07-28';
+  doc.getElementById('syncHint').textContent = '24件の注文を保存済み。最近の注文を自動更新します';
+});
+</script></body></html>

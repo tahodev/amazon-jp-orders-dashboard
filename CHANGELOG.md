@@ -2,6 +2,20 @@
 
 All notable changes are documented here.
 
+## 0.4.0 - 2026-07-28
+
+### Added
+
+- Chrome Web Store icons, screenshots, promo tile, listing copy, privacy fields, review instructions, and submission checklist.
+- Deterministic Chrome Web Store ZIP builder with manifest, permission, icon, and remote-script validation.
+- A concise local-data disclosure in the extension popup.
+
+### Changed
+
+- Removed the unnecessary `tabs`, `activeTab`, and `localhost` permissions.
+- Reduced the manifest to `scripting`, Amazon.co.jp, and the fixed IPv4 loopback receiver.
+- Expanded the public privacy policy in Japanese and English with Chrome Web Store Limited Use disclosures.
+
 ## 0.3.0 - 2026-07-28
 
 ### Added

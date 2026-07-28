@@ -111,3 +111,13 @@ def test_public_versions_match():
     manifest = json.loads((ROOT / "chrome_extension" / "manifest.json").read_text(encoding="utf-8"))
     pyproject = (ROOT / "pyproject.toml").read_text(encoding="utf-8")
     assert f'version = "{manifest["version"]}"' in pyproject
+
+
+def test_extension_permissions_are_store_minimal():
+    manifest = json.loads((ROOT / "chrome_extension" / "manifest.json").read_text(encoding="utf-8"))
+    assert manifest["manifest_version"] == 3
+    assert manifest["permissions"] == ["scripting"]
+    assert manifest["host_permissions"] == [
+        "https://www.amazon.co.jp/*",
+        "http://127.0.0.1:8776/*",
+    ]

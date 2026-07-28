@@ -7,7 +7,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 PRIVATE_PREFIXES = ("data/", "exports/", "screenshots/")
 TEXT_SUFFIXES = {
-    ".bat", ".css", ".html", ".ini", ".js", ".json", ".md", ".py", ".toml", ".txt", ".yml", ".yaml"
+    ".bat", ".css", ".html", ".ini", ".js", ".json", ".md", ".py", ".svg", ".toml", ".txt", ".yml", ".yaml"
 }
 PATTERNS = {
     "Windows user path": re.compile(r"[A-Za-z]:\\Users\\[^\\\s]+", re.IGNORECASE),

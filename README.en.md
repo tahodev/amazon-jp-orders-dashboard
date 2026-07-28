@@ -74,6 +74,16 @@ The receiver accepts loopback connections only, rejects untrusted browser
 origins, requires JSON for writes, and applies restrictive security headers.
 The extension is limited to Amazon.co.jp and the local receiver.
 
+### Extension permissions
+
+| Permission | Purpose |
+|---|---|
+| `scripting` | Run the packaged parser after a user presses a capture button |
+| `https://www.amazon.co.jp/*` | Read order-history and order-detail pages |
+| `http://127.0.0.1:8776/*` | Save to the receiver on the same computer |
+
+The extension does not request tabs, cookies, downloads, payment, general history, or remote-code permissions.
+
 ## Categories
 
 - Food & drink (`食品・飲料`)

@@ -1,20 +1,27 @@
 {
   "manifest_version": 3,
-  "name": "Amazon JP Orders ローカル取込",
-  "version": "0.3.0",
-  "description": "ログイン済みのAmazon.co.jp注文履歴を読み取り、ローカルの支出ダッシュボードへ保存します。",
+  "name": "Amazon JP Orders - ローカル支出ダッシュボード",
+  "version": "0.4.0",
+  "description": "Amazon.co.jpの注文履歴をPC内だけに保存し、月別・カテゴリ別の支出ダッシュボードとCSVを作成します。",
   "permissions": [
-    "activeTab",
-    "scripting",
-    "tabs"
+    "scripting"
   ],
   "host_permissions": [
     "https://www.amazon.co.jp/*",
-    "http://127.0.0.1:8776/*",
-    "http://localhost:8776/*"
+    "http://127.0.0.1:8776/*"
   ],
+  "icons": {
+    "16": "icons/icon16.png",
+    "32": "icons/icon32.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
   "action": {
-    "default_title": "Amazon JP Orders ローカル取込",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "32": "icons/icon32.png"
+    },
+    "default_title": "Amazon JP Orders - ローカル支出ダッシュボード",
     "default_popup": "popup.html"
   }
 }
