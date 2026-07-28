@@ -1,3 +1,4 @@
+import json
 from pathlib import Path
 from tempfile import TemporaryDirectory
 
@@ -6,6 +7,9 @@ from amazon_jp_orders.dashboard import render_dashboard
 from amazon_jp_orders.db import OrdersDB, normalize_date, parse_yen
 from amazon_jp_orders.paths import get_paths
 from amazon_jp_orders.server import _host_allowed, _origin_allowed
+
+
+ROOT = Path(__file__).resolve().parents[1]
 
 
 def test_parse_yen():
@@ -101,3 +105,9 @@ def test_dashboard_hides_local_paths_and_escapes_script_content():
     assert str(private_root) not in output
     assert "</script><script>alert" not in output
     assert "&lt;/script&gt;&lt;script&gt;" in output
+
+
+def test_public_versions_match():
+    manifest = json.loads((ROOT / "chrome_extension" / "manifest.json").read_text(encoding="utf-8"))
+    pyproject = (ROOT / "pyproject.toml").read_text(encoding="utf-8")
+    assert f'version = "{manifest["version"]}"' in pyproject

@@ -1,6 +1,6 @@
 [project]
 name = "amazon-jp-orders-dashboard"
-version = "0.2.0"
+version = "0.3.0"
 description = "Privacy-first local spending dashboard for Amazon.co.jp order history"
 requires-python = ">=3.10"
 license = { text = "MIT" }

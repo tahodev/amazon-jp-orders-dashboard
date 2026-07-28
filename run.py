@@ -2,6 +2,8 @@ from __future__ import annotations
 
 import argparse
 import json
+import urllib.error
+import urllib.request
 import webbrowser
 from pathlib import Path
 
@@ -18,6 +20,7 @@ def main() -> int:
     serve = sub.add_parser("serve", help="Start local capture receiver")
     serve.add_argument("--host", default="127.0.0.1")
     serve.add_argument("--port", type=int, default=8776)
+    serve.add_argument("--open-browser", action="store_true", help="Open the dashboard after the receiver starts")
 
     sub.add_parser("dashboard", help="Rebuild dashboard and CSV exports")
 
@@ -26,7 +29,16 @@ def main() -> int:
 
     args = parser.parse_args()
     if args.cmd in {None, "serve"}:
-        run_server(host=getattr(args, "host", "127.0.0.1"), port=getattr(args, "port", 8776))
+        host = getattr(args, "host", "127.0.0.1")
+        port = getattr(args, "port", 8776)
+        dashboard_url = f"http://{host}:{port}/dashboard"
+        if _receiver_ready(host, port):
+            print(f"[amazon_jp_orders] receiver is already running on http://{host}:{port}")
+            if getattr(args, "open_browser", False):
+                webbrowser.open(dashboard_url)
+            return 0
+        on_ready = (lambda: webbrowser.open(dashboard_url)) if getattr(args, "open_browser", False) else None
+        run_server(host=host, port=port, on_ready=on_ready)
         return 0
 
     paths = get_paths()
@@ -48,6 +60,15 @@ def main() -> int:
         db.close()
     parser.error(f"unknown command: {args.cmd}")
     return 2
+
+
+def _receiver_ready(host: str, port: int) -> bool:
+    try:
+        with urllib.request.urlopen(f"http://{host}:{port}/api/health", timeout=0.4) as response:
+            payload = json.loads(response.read().decode("utf-8"))
+            return response.status == 200 and payload.get("ok") is True and payload.get("service") == "amazon-jp-orders"
+    except (OSError, ValueError, urllib.error.URLError):
+        return False
 
 
 if __name__ == "__main__":

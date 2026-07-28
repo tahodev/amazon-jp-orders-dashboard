@@ -3,6 +3,9 @@
 [English](README.en.md)
 
 [![CI](https://github.com/HanaCROOK/amazon-jp-orders-dashboard/actions/workflows/ci.yml/badge.svg)](https://github.com/HanaCROOK/amazon-jp-orders-dashboard/actions/workflows/ci.yml)
+[![Release](https://img.shields.io/github/v/release/HanaCROOK/amazon-jp-orders-dashboard)](https://github.com/HanaCROOK/amazon-jp-orders-dashboard/releases/latest)
+[![License: MIT](https://img.shields.io/badge/License-MIT-1f5e45.svg)](LICENSE)
+[![Python 3.10+](https://img.shields.io/badge/Python-3.10%2B-3776ab.svg)](https://www.python.org/)
 
 **ログイン済みのAmazon.co.jp注文履歴を、プライベートなローカル支出ダッシュボードに。**
 
@@ -10,6 +13,16 @@
 クラウドアカウント、Amazonの認証情報、テレメトリーは使用しません。
 
 ![匿名化されたダッシュボードのプレビュー](docs/assets/dashboard-demo.png)
+
+> 注文履歴は外部サーバーへ送信されません。AmazonのパスワードやCookieも保存しません。
+
+## 3ステップで始める
+
+1. [最新Release](https://github.com/HanaCROOK/amazon-jp-orders-dashboard/releases/latest)のZIPを展開します。
+2. `start_dashboard.bat`をダブルクリックします。
+3. Chromeで`chrome://extensions/`を開き、`chrome_extension`を読み込みます。
+
+詳しい画面付き手順、更新、アンインストール、トラブル対応は[インストールガイド](docs/INSTALL.md)にまとめています。
 
 ## このプロジェクトについて
 
@@ -34,7 +47,7 @@ Pythonのローカル受信サービスがSQLiteに保存し、ダッシュボ�
 - **見える自動処理**：ページ移動と進捗を表示し、購入・返品・アカウント操作は行いません。
 - **小さな構成**：Python標準ライブラリ、Vanilla JavaScript、SQLite、Manifest V3。
 
-## クイックスタート
+## クイックスタート（ソースから利用する場合）
 
 必要環境：Windows、Python 3.10以降、Google Chrome、Chromeでログイン済みのAmazon.co.jpアカウント。
 
@@ -42,7 +55,7 @@ Pythonのローカル受信サービスがSQLiteに保存し、ダッシュボ�
 2. 次のファイルを実行します。
 
    ```bat
-   scripts\start_amazon_jp_orders.bat
+   start_dashboard.bat
    ```
 
 3. `chrome://extensions/`を開き、**デベロッパーモード**を有効にします。
@@ -133,11 +146,15 @@ node --check chrome_extension/popup.js
 node --check chrome_extension/batch.js
 node --check chrome_extension/capture_core.js
 python scripts/check_public_release.py
+python scripts/build_release.py
 ```
 
 リポジトリには合成テストデータだけを収録しています。AmazonのDOM解析を変更するPRでは、
 実在する注文番号、アカウント画面、個人情報を共有しないでください。
 [CONTRIBUTING.md](CONTRIBUTING.md)も参照してください。
+
+機能提案と不具合報告は[Issues](https://github.com/HanaCROOK/amazon-jp-orders-dashboard/issues)、
+今後の方向性は[ROADMAP.md](ROADMAP.md)、利用時の確認事項は[SUPPORT.md](SUPPORT.md)にあります。
 
 ## 制限事項
 

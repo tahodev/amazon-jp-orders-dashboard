@@ -2,12 +2,27 @@
 
 [日本語](README.md)
 
+[![CI](https://github.com/HanaCROOK/amazon-jp-orders-dashboard/actions/workflows/ci.yml/badge.svg)](https://github.com/HanaCROOK/amazon-jp-orders-dashboard/actions/workflows/ci.yml)
+[![Release](https://img.shields.io/github/v/release/HanaCROOK/amazon-jp-orders-dashboard)](https://github.com/HanaCROOK/amazon-jp-orders-dashboard/releases/latest)
+[![License: MIT](https://img.shields.io/badge/License-MIT-1f5e45.svg)](LICENSE)
+[![Python 3.10+](https://img.shields.io/badge/Python-3.10%2B-3776ab.svg)](https://www.python.org/)
+
 **Turn your signed-in Amazon.co.jp order history into a private, local spending dashboard.**
 
 One-click incremental sync, item-level expense categories, monthly charts, and
 CSV export. No cloud account, no Amazon credentials, and no telemetry.
 
 ![Sanitized dashboard preview](docs/assets/dashboard-demo.png)
+
+> Order history never leaves your computer. The project does not store Amazon passwords or cookies.
+
+## Start in three steps
+
+1. Extract the ZIP from the [latest release](https://github.com/HanaCROOK/amazon-jp-orders-dashboard/releases/latest).
+2. Double-click `start_dashboard.bat`.
+3. Open `chrome://extensions/` and load the included `chrome_extension` folder.
+
+See the [Japanese installation guide](docs/INSTALL.md) for update, removal, and troubleshooting details.
 
 ## Highlights
 
@@ -26,7 +41,7 @@ Requirements: Windows, Python 3.10+, Google Chrome, and an Amazon.co.jp account
 already signed in to Chrome.
 
 1. Clone or download this repository.
-2. Run `scripts\start_amazon_jp_orders.bat`.
+2. Run `start_dashboard.bat`.
 3. Open `chrome://extensions/`, enable **Developer mode**, choose **Load unpacked**, and select `chrome_extension`.
 4. Open the extension and choose **最新の注文を同期**.
 5. Keep the sync tab open. The dashboard opens automatically when the sync finishes.
@@ -93,11 +108,15 @@ node --check chrome_extension/popup.js
 node --check chrome_extension/batch.js
 node --check chrome_extension/capture_core.js
 python scripts/check_public_release.py
+python scripts/build_release.py
 ```
 
 The repository ships synthetic fixtures only. Contributions that change Amazon
 DOM parsing must not include real account screenshots or order IDs. See
 [CONTRIBUTING.md](CONTRIBUTING.md).
+
+Use [Issues](https://github.com/HanaCROOK/amazon-jp-orders-dashboard/issues) for focused bug reports and proposals.
+See [ROADMAP.md](ROADMAP.md) and [SUPPORT.md](SUPPORT.md) for project direction and support boundaries.
 
 ## Limitations
 

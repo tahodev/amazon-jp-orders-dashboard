@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Amazon JP Orders Dashboard</title>
+  <style>
+    * { box-sizing: border-box; }
+    html, body { width: 1280px; height: 640px; margin: 0; overflow: hidden; }
+    body {
+      display: grid;
+      grid-template-columns: 520px 1fr;
+      font-family: "Yu Gothic UI", "Meiryo", Arial, sans-serif;
+      color: #14221b;
+      background: #f7f5ef;
+    }
+    .copy {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 64px 42px 64px 70px;
+      border-right: 1px solid #d8d0c0;
+    }
+    .eyebrow { color: #1f6a4c; font-size: 21px; font-weight: 800; }
+    h1 { margin: 18px 0; font-size: 50px; line-height: 1.18; letter-spacing: 0; }
+    p { margin: 0; color: #4e5b54; font-size: 23px; line-height: 1.65; }
+    .privacy {
+      display: inline-flex;
+      align-items: center;
+      align-self: flex-start;
+      gap: 10px;
+      margin-top: 28px;
+      padding: 10px 14px;
+      border: 1px solid #b9cabe;
+      border-radius: 6px;
+      background: #fff;
+      color: #1f5e45;
+      font-size: 17px;
+      font-weight: 800;
+    }
+    .dot { width: 10px; height: 10px; border-radius: 50%; background: #1f6a4c; }
+    .visual { position: relative; padding: 62px 0 0 44px; overflow: hidden; background: #fff; }
+    .visual img {
+      width: 920px;
+      max-width: none;
+      border: 1px solid #d8d0c0;
+      box-shadow: 0 18px 54px rgba(26, 44, 35, .15);
+    }
+    .accent { position: absolute; left: 0; top: 0; width: 100%; height: 10px; background: #ffcf35; }
+  </style>
+</head>
+<body>
+  <section class="copy">
+    <div class="eyebrow">Amazon.co.jp × ローカル家計管理</div>
+    <h1>注文履歴を<br>支出ダッシュボードに</h1>
+    <p>ワンクリック同期・カテゴリ集計・CSV出力</p>
+    <div class="privacy"><span class="dot"></span>注文データはPCの外へ送信しません</div>
+  </section>
+  <section class="visual">
+    <div class="accent"></div>
+    <img src="dashboard-demo.png" alt="匿名化されたダッシュボード">
+  </section>
+</body>
+</html>

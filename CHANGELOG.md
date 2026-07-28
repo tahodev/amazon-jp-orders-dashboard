@@ -2,6 +2,22 @@
 
 All notable changes are documented here.
 
+## 0.3.0 - 2026-07-28
+
+### Added
+
+- Root-level Windows launcher with a Japanese environment diagnostic.
+- Reproducible Release ZIP builder and SHA-256 checksum output.
+- Detailed installation, update, removal, release, support, roadmap, and conduct documentation.
+- Feature request template and private security-reporting link.
+- Product-focused README badges and three-step release installation path.
+
+### Changed
+
+- The dashboard now opens after the receiver has started, avoiding a misleading initial connection error.
+- The health response no longer exposes absolute local database or dashboard paths.
+- CI now smoke-tests diagnostics and the distributable ZIP on every supported Python version.
+
 ## 0.2.0 - 2026-07-27
 
 ### Added

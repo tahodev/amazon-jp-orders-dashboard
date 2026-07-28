@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Amazon JP Orders ローカル取込",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "ログイン済みのAmazon.co.jp注文履歴を読み取り、ローカルの支出ダッシュボードへ保存します。",
   "permissions": [
     "activeTab",

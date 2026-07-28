@@ -4,7 +4,7 @@ import json
 import re
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from pathlib import Path
-from typing import Any
+from typing import Any, Callable
 from urllib.parse import parse_qs, urlparse
 
 from .dashboard import build_dashboard
@@ -15,7 +15,7 @@ MAX_BODY_BYTES = 25 * 1024 * 1024
 LOOPBACK_HOSTS = {"127.0.0.1", "localhost"}
 
 
-def run_server(host: str = "127.0.0.1", port: int = 8776) -> None:
+def run_server(host: str = "127.0.0.1", port: int = 8776, on_ready: Callable[[], None] | None = None) -> None:
     if host.lower() not in LOOPBACK_HOSTS:
         raise ValueError("receiver must bind to 127.0.0.1 or localhost")
     paths = get_paths()
@@ -43,8 +43,6 @@ def run_server(host: str = "127.0.0.1", port: int = 8776) -> None:
                     {
                         "ok": True,
                         "service": "amazon-jp-orders",
-                        "db_path": str(paths.db_path),
-                        "dashboard_path": str(paths.dashboard_path),
                     },
                 )
                 return
@@ -112,7 +110,7 @@ def run_server(host: str = "127.0.0.1", port: int = 8776) -> None:
                 return
             try:
                 result = db.ingest_capture(payload)
-                dashboard_path = build_dashboard(db)
+                build_dashboard(db)
                 self._send_json(
                     200,
                     {
@@ -121,7 +119,6 @@ def run_server(host: str = "127.0.0.1", port: int = 8776) -> None:
                         "saved_items": result.saved_items,
                         "skipped_items": result.skipped_items,
                         "dashboard_url": f"http://{host}:{port}/dashboard",
-                        "dashboard_path": str(dashboard_path),
                     },
                 )
             except Exception as exc:  # noqa: BLE001 - HTTP boundary must return JSON instead of crashing
@@ -136,14 +133,13 @@ def run_server(host: str = "127.0.0.1", port: int = 8776) -> None:
                 category = str(payload.get("category") or "").strip()
                 remember = bool(payload.get("remember", True))
                 result = db.update_item_category(item_id, category, remember=remember)
-                dashboard_path = build_dashboard(db)
+                build_dashboard(db)
                 self._send_json(
                     200,
                     {
                         "ok": True,
                         **result,
                         "dashboard_url": f"http://{host}:{port}/dashboard",
-                        "dashboard_path": str(dashboard_path),
                     },
                 )
             except Exception as exc:  # noqa: BLE001 - HTTP boundary must return JSON instead of crashing
@@ -202,6 +198,8 @@ def run_server(host: str = "127.0.0.1", port: int = 8776) -> None:
     print(f"[amazon_jp_orders] receiver listening on http://{host}:{port}")
     print(f"[amazon_jp_orders] dashboard: http://{host}:{port}/dashboard")
     print(f"[amazon_jp_orders] load extension from: {paths.root / 'chrome_extension'}")
+    if on_ready is not None:
+        on_ready()
     try:
         httpd.serve_forever()
     finally:
