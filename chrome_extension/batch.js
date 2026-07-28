@@ -17,23 +17,23 @@ async function main() {
   const mode = params.get("mode") || "range";
   const maxPages = Number(params.get("maxPages") || 50);
   if (!tabId) {
-    log("missing tabId");
+    log("対象のAmazonタブを特定できませんでした。");
     return;
   }
 
   let totalOrders = 0;
   let totalItems = 0;
   let stopReason = "";
-  log(`开始同步：${sinceDate} 至 ${untilDate}`);
-  log(`读取订单详情：${includeDetails ? "是" : "否"}`);
+  log(`同期期間：${sinceDate}〜${untilDate}`);
+  log(`注文内容ページの確認：${includeDetails ? "あり" : "なし"}`);
   const firstPageUrl = `https://www.amazon.co.jp/gp/your-account/order-history?timeFilter=year-${year}`;
-  log(`正在打开 ${year} 年注文履歴...`);
+  log(`${year}年の注文履歴を開いています...`);
   await chrome.tabs.update(tabId, { url: firstPageUrl });
   await waitForTabComplete(tabId);
   await sleep(1200);
 
   for (let page = 1; page <= maxPages; page += 1) {
-    log(`第 ${page} 页：正在读取列表和订单详情，请查看 Amazon 页面右上角进度...`);
+    log(`${page}ページ目：注文一覧と注文内容を確認しています。Amazonページ右上の進捗も確認できます。`);
     const [{ result }] = await chrome.scripting.executeScript({
       target: { tabId },
       func: captureAmazonOrdersFromPage,
@@ -48,9 +48,9 @@ async function main() {
     if (!result?.ok) {
       throw new Error(result?.error || `page ${page} capture failed`);
     }
-    log(`第 ${page} 页读取完成：${result.orders.length} 个订单 / ${result.item_count} 个商品`);
+    log(`${page}ページ目の読取完了：${result.orders.length}件の注文 / ${result.item_count}件の商品`);
     if (result.orders.length > 0) {
-      log(`第 ${page} 页：正在写入本地数据库...`);
+      log(`${page}ページ目：ローカルデータベースに保存しています...`);
       const res = await fetch(`${RECEIVER}/api/capture`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -65,7 +65,7 @@ async function main() {
       }
       totalOrders += saved.saved_orders || 0;
       totalItems += saved.saved_items || 0;
-      log(`第 ${page} 页保存完成：${saved.saved_orders} 个订单 / ${saved.saved_items} 个商品`);
+      log(`${page}ページ目の保存完了：${saved.saved_orders}件の注文 / ${saved.saved_items}件の商品`);
     }
     if (result.reached_since_date) {
       stopReason = `reached_since_date_${sinceDate}`;
@@ -75,7 +75,7 @@ async function main() {
       stopReason = "no_next_page";
       break;
     }
-    log(`第 ${page} 页完成，准备翻到下一页...`);
+    log(`${page}ページ目が完了しました。次のページへ移動します...`);
     await chrome.tabs.update(tabId, { url: result.next_url });
     await waitForTabComplete(tabId);
     await sleep(1800);
@@ -85,22 +85,22 @@ async function main() {
     stopReason = `max_pages_${maxPages}`;
   }
   const reasonText = friendlyStopReason(stopReason, sinceDate, maxPages);
-  log(`同步完成：${totalOrders} 个订单 / ${totalItems} 个商品。${reasonText}`);
-  await showAmazonStatus(tabId, `同步完成\n${totalOrders} 个订单 / ${totalItems} 个商品\n${reasonText}`, "success");
+  log(`同期完了：${totalOrders}件の注文 / ${totalItems}件の商品。${reasonText}`);
+  await showAmazonStatus(tabId, `同期が完了しました\n${totalOrders}件の注文 / ${totalItems}件の商品\n${reasonText}`, "success");
   await chrome.tabs.create({ url: `${RECEIVER}/dashboard` });
 }
 
 function friendlyStopReason(reason, sinceDate, maxPages) {
   if (reason.startsWith("reached_since_date_")) {
-    return `已读取到起始日期 ${sinceDate}。`;
+    return `開始日（${sinceDate}）以前の注文を確認したため終了しました。`;
   }
   if (reason === "no_next_page") {
-    return "已读取到最后一页。";
+    return "最後のページまで確認しました。";
   }
   if (reason.startsWith("max_pages_")) {
-    return `已达到 ${maxPages} 页安全上限，请检查日期范围。`;
+    return `安全上限の${maxPages}ページに達しました。日付範囲を確認してください。`;
   }
-  return "任务已正常结束。";
+  return "正常に終了しました。";
 }
 
 async function showAmazonStatus(tabId, message, status) {
@@ -117,7 +117,7 @@ async function showAmazonStatus(tabId, message, status) {
       args: [message, status]
     });
   } catch (err) {
-    log(`无法更新 Amazon 页面提示：${err?.message || err}`);
+    log(`Amazonページの進捗表示を更新できませんでした：${err?.message || err}`);
   }
 }
 
@@ -143,9 +143,9 @@ function sleep(ms) {
 }
 
 main().catch(async (err) => {
-  log(`ERROR: ${err?.message || err}`);
+  log(`エラー：${err?.message || err}`);
   const tabId = Number(new URLSearchParams(location.search).get("tabId"));
   if (tabId) {
-    await showAmazonStatus(tabId, `同步失败\n${err?.message || err}\n请查看 Batch 标签页日志。`, "error");
+    await showAmazonStatus(tabId, `同期に失敗しました\n${err?.message || err}\n同期タブのログを確認してください。`, "error");
   }
 });

@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="zh-CN">
+<html lang="ja">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -9,38 +9,38 @@
 <body>
   <header>
     <h1>Amazon JP Orders</h1>
-    <div id="health" class="muted">checking receiver...</div>
+    <div id="health" class="muted">ローカル受信サービスを確認中...</div>
   </header>
 
-  <button id="syncLatest" type="button" class="primary-action">一键同步最新订单</button>
-  <div id="syncHint" class="sync-hint">自动从本地最后订单附近更新到今天</div>
+  <button id="syncLatest" type="button" class="primary-action">最新の注文を同期</button>
+  <div id="syncHint" class="sync-hint">ローカルの最新注文付近から今日まで自動更新します</div>
 
   <label>
-    年份
+    年
     <select id="year"></select>
   </label>
 
   <div class="date-grid">
     <label>
-      开始
+      開始日
       <input id="since" type="date">
     </label>
     <label>
-      结束
+      終了日
       <input id="until" type="date">
     </label>
   </div>
 
   <label class="check">
     <input id="details" type="checkbox" checked>
-    <span>注文内容ページも読む</span>
+    <span>注文内容ページも確認する</span>
   </label>
 
   <div class="actions">
-    <button id="openYear" type="button" class="ghost">打开所选年份订单</button>
-    <button id="capture" type="button">抓取当前页</button>
-    <button id="captureAll" type="button">按日期范围抓取</button>
-    <button id="dashboard" type="button" class="ghost">Dashboard</button>
+    <button id="openYear" type="button" class="ghost">選択した年の注文履歴を開く</button>
+    <button id="capture" type="button">現在のページを取り込む</button>
+    <button id="captureAll" type="button">指定期間を取り込む</button>
+    <button id="dashboard" type="button" class="ghost">支出ダッシュボード</button>
   </div>
 
   <pre id="log"></pre>

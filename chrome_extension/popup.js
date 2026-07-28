@@ -22,10 +22,10 @@ async function checkHealth() {
   try {
     const res = await fetch(`${RECEIVER}/api/health`, { cache: "no-store" });
     const data = await res.json();
-    healthEl.textContent = data.ok ? "receiver ready" : "receiver error";
+    healthEl.textContent = data.ok ? "ローカル受信サービス：接続済み" : "ローカル受信サービス：エラー";
   } catch (err) {
-    healthEl.textContent = "receiver not running";
-    log("请先运行 scripts\\start_amazon_jp_orders.bat");
+    healthEl.textContent = "ローカル受信サービス：停止中";
+    log("先に scripts\\start_amazon_jp_orders.bat を起動してください。");
   }
 }
 
@@ -34,7 +34,7 @@ openYearBtn.addEventListener("click", async () => {
   await chrome.tabs.create({
     url: orderHistoryUrl(year)
   });
-  log(`已打开 ${year} 年注文履歴。`);
+  log(`${year}年の注文履歴を開きました。`);
 });
 
 dashboardBtn.addEventListener("click", async () => {
@@ -49,25 +49,25 @@ syncLatestBtn.addEventListener("click", async () => {
     const stateRes = await fetch(`${RECEIVER}/api/sync-state?year=${year}`, { cache: "no-store" });
     const state = await stateRes.json();
     if (!stateRes.ok || !state.ok) {
-      throw new Error(state.error || "无法读取本地同步状态");
+      throw new Error(state.error || "ローカルの同期状態を取得できませんでした");
     }
     const sinceDate = recommendedSinceDate(state.latest_order_date, year, 14);
     yearEl.value = String(year);
     sinceEl.value = sinceDate;
     untilEl.value = untilDate;
     syncHintEl.textContent = state.latest_order_date
-      ? `已有 ${state.order_count} 单；回看 14 天更新 ${sinceDate} 至 ${untilDate}`
-      : `本年度尚无记录；首次同步 ${sinceDate} 至 ${untilDate}`;
-    log(`准备同步 ${sinceDate} 至 ${untilDate}。`);
+      ? `${state.order_count}件の注文を保存済み。14日前まで遡り、${sinceDate}〜${untilDate}を更新します`
+      : `今年の記録はまだありません。${sinceDate}〜${untilDate}を初回同期します`;
+    log(`${sinceDate}〜${untilDate}の同期を準備しています。`);
     const tab = await getAmazonTab({ allowCreate: true, year });
     if (!tab) {
       return;
     }
     await openBatchCapture(tab, year, sinceDate, untilDate, "latest");
   } catch (err) {
-    log(`同步失败: ${err?.message || err}`);
+    log(`同期に失敗しました：${err?.message || err}`);
     if (String(err).includes("Failed to fetch")) {
-      syncHintEl.textContent = "请先运行 start_amazon_jp_orders.bat";
+      syncHintEl.textContent = "先に start_amazon_jp_orders.bat を起動してください";
     }
   } finally {
     setBusy(false);
@@ -90,9 +90,9 @@ captureAllBtn.addEventListener("click", async () => {
     }
     const year = selectedYear();
     await openBatchCapture(tab, year, sinceEl.value, untilEl.value, "range");
-    log(`已开始抓取 ${sinceEl.value} 至 ${untilEl.value}。`);
+    log(`${sinceEl.value}〜${untilEl.value}の取り込みを開始しました。`);
   } catch (err) {
-    log(`异常: ${err?.message || err}`);
+    log(`エラー：${err?.message || err}`);
   } finally {
     setBusy(false);
   }
@@ -108,7 +108,7 @@ async function runCurrentPageCapture() {
     if (!tab) {
       return;
     }
-    log("正在读取当前页和订单详情...");
+    log("現在のページと注文内容を読み取っています...");
     const [{ result }] = await chrome.scripting.executeScript({
       target: { tabId: tab.id },
       func: captureAmazonOrdersFromPage,
@@ -121,10 +121,10 @@ async function runCurrentPageCapture() {
       }]
     });
     if (!result?.ok) {
-      log(`抓取失败: ${result?.error || "unknown error"}`);
+      log(`取り込みに失敗しました：${result?.error || "原因不明のエラー"}`);
       return;
     }
-    log(`页面解析完成: ${result.orders.length} orders, ${result.item_count} 商品行`);
+    log(`ページの解析が完了しました：${result.orders.length}件の注文 / ${result.item_count}件の商品`);
     const res = await fetch(`${RECEIVER}/api/capture`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -132,13 +132,13 @@ async function runCurrentPageCapture() {
     });
     const saved = await res.json();
     if (!saved.ok) {
-      log(`保存失败: ${saved.error || res.status}`);
+      log(`保存に失敗しました：${saved.error || res.status}`);
       return;
     }
-    log(`已保存: ${saved.saved_orders} orders / ${saved.saved_items} 商品行`);
+    log(`保存完了：${saved.saved_orders}件の注文 / ${saved.saved_items}件の商品`);
     await chrome.tabs.create({ url: saved.dashboard_url || `${RECEIVER}/dashboard` });
   } catch (err) {
-    log(`异常: ${err?.message || err}`);
+    log(`エラー：${err?.message || err}`);
   } finally {
     setBusy(false);
   }
@@ -150,10 +150,10 @@ async function getAmazonTab({ allowCreate, year = selectedYear() }) {
     return tab;
   }
   if (allowCreate) {
-    log("正在新建专用的 Amazon 注文履歴标签页...");
+    log("専用のAmazon注文履歴タブを開いています...");
     return chrome.tabs.create({ url: orderHistoryUrl(year), active: false });
   }
-  log("请先打开 Amazon.co.jp 注文履歴页面。");
+  log("先にAmazon.co.jpの注文履歴ページを開いてください。");
   return null;
 }
 
@@ -202,11 +202,11 @@ function formatLocalDate(date) {
 
 function validRange() {
   if (!sinceEl.value || !untilEl.value) {
-    log("请选择开始和结束日期。");
+    log("開始日と終了日を選択してください。");
     return false;
   }
   if (sinceEl.value > untilEl.value) {
-    log("开始日期不能晚于结束日期。");
+    log("開始日は終了日以前にしてください。");
     return false;
   }
   return true;
@@ -217,7 +217,7 @@ async function init() {
   for (let year = currentYear; year >= 2010; year -= 1) {
     const option = document.createElement("option");
     option.value = String(year);
-    option.textContent = `${year} 年`;
+    option.textContent = `${year}年`;
     yearEl.appendChild(option);
   }
   const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });

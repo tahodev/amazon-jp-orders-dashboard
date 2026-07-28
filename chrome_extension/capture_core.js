@@ -7,14 +7,14 @@ async function captureAmazonOrdersFromPage(options) {
   const returnNextUrl = options?.returnNextUrl === true;
 
   try {
-    showCaptureOverlay("准备读取订单列表...");
+    showCaptureOverlay("注文一覧を読み取る準備をしています...");
     const orders = [];
     const seenOrderIds = new Set();
     let sawOlderOrder = false;
     const cards = findOrderCards(document);
-    showCaptureOverlay(`第 ${pageNumber} 页：找到 ${cards.length} 个订单区块，开始读取...`);
+    showCaptureOverlay(`${pageNumber}ページ目：${cards.length}件の注文を検出しました。読取を開始します...`);
     if (cards.length === 0) {
-      showCaptureOverlay("没有找到订单区块。请确认当前页是注文履歴列表。", true);
+      showCaptureOverlay("注文を検出できませんでした。現在のページが注文履歴か確認してください。", true);
       return {
         ok: false,
         error: "no_order_cards_found",
@@ -26,32 +26,32 @@ async function captureAmazonOrdersFromPage(options) {
       index += 1;
       const order = extractOrderFromCard(card, location.href);
       if (!order.order_id || !order.order_date) {
-        showCaptureOverlay(`第 ${pageNumber} 页：跳过第 ${index}/${cards.length} 个区块，缺少订单号或注文日`);
+        showCaptureOverlay(`${pageNumber}ページ目：${index}/${cards.length}件目は注文番号または注文日がないためスキップします`);
         continue;
       }
       if (order.order_date > untilDate) {
-        showCaptureOverlay(`第 ${pageNumber} 页：跳过 ${order.order_date}，晚于 ${untilDate}`);
+        showCaptureOverlay(`${pageNumber}ページ目：${order.order_date}は終了日（${untilDate}）より後のためスキップします`);
         continue;
       }
       if (order.order_date < sinceDate) {
         sawOlderOrder = true;
-        showCaptureOverlay(`第 ${pageNumber} 页：遇到 ${order.order_date}，早于 ${sinceDate}`);
+        showCaptureOverlay(`${pageNumber}ページ目：開始日（${sinceDate}）より前の注文（${order.order_date}）を確認しました`);
         continue;
       }
       if (seenOrderIds.has(order.order_id)) {
-        showCaptureOverlay(`第 ${pageNumber} 页：跳过重复订单 ${order.order_id}`);
+        showCaptureOverlay(`${pageNumber}ページ目：重複した注文 ${order.order_id} をスキップします`);
         continue;
       }
       seenOrderIds.add(order.order_id);
       if (includeDetails && order.detail_url) {
-        showCaptureOverlay(`第 ${pageNumber} 页：读取第 ${index}/${cards.length} 单详情 ${order.order_id}`);
+        showCaptureOverlay(`${pageNumber}ページ目：${index}/${cards.length}件目の注文内容を確認中 ${order.order_id}`);
         const detail = await fetchDetail(order.detail_url, order.order_total_yen);
         if (detail.items.length > 0) {
           order.items = detail.items;
         }
         order.detail_status = detail.status;
       } else {
-        showCaptureOverlay(`第 ${pageNumber} 页：读取第 ${index}/${cards.length} 单列表内容 ${order.order_id}`);
+        showCaptureOverlay(`${pageNumber}ページ目：${index}/${cards.length}件目の注文一覧を確認中 ${order.order_id}`);
       }
       if (!order.items || order.items.length === 0) {
         order.items = extractItemsFromNode(card, order.order_total_yen, location.href);
@@ -64,9 +64,9 @@ async function captureAmazonOrdersFromPage(options) {
     const reachedSinceDate = sawOlderOrder;
     const nextUrl = returnNextUrl && !reachedSinceDate ? findNextPageUrl(document, location.href) : "";
     const nextMessage = returnNextUrl && nextUrl
-      ? "本页读取完成，正在保存；随后继续下一页。"
-      : "本页读取完成，正在保存。";
-    showCaptureOverlay(`${nextMessage}\n第 ${pageNumber} 页：${orders.length} 个订单 / ${itemCount} 个商品`);
+      ? "このページの読取が完了しました。保存後、次のページへ進みます。"
+      : "このページの読取が完了しました。保存しています。";
+    showCaptureOverlay(`${nextMessage}\n${pageNumber}ページ目：${orders.length}件の注文 / ${itemCount}件の商品`);
     return {
       ok: true,
       source_url: location.href,
@@ -81,7 +81,7 @@ async function captureAmazonOrdersFromPage(options) {
       note: returnNextUrl ? "chrome_extension_batch_page" : "chrome_extension_current_page"
     };
   } catch (err) {
-    showCaptureOverlay(`抓取异常：${err?.message || err}`, true);
+    showCaptureOverlay(`取込エラー：${err?.message || err}`, true);
     return { ok: false, error: err?.message || String(err), source_url: location.href };
   }
 

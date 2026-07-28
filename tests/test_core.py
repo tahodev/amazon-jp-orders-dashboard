@@ -21,10 +21,10 @@ def test_normalize_date():
 
 def test_classify_examples():
     rules = load_rules(get_paths().category_rules_path)
-    assert classify_title("令和7年産 玄米 2kg ヒノヒカリ", rules).category == "食品饮料"
-    assert classify_title("マミーポコ パンツ サンリオキャラクターズデザイン オムツ", rules).category == "儿童"
-    assert classify_title("すっぴんクリームC パステルローズの香り30g", rules).category == "美妆护肤"
-    assert classify_title("オカモト コンドームズ ピュアマーガレット 12個入", rules).category == "药品日用品"
+    assert classify_title("令和7年産 玄米 2kg ヒノヒカリ", rules).category == "食品・飲料"
+    assert classify_title("マミーポコ パンツ サンリオキャラクターズデザイン オムツ", rules).category == "子ども用品"
+    assert classify_title("すっぴんクリームC パステルローズの香り30g", rules).category == "美容・スキンケア"
+    assert classify_title("オカモト コンドームズ ピュアマーガレット 12個入", rules).category == "医薬品・日用品"
 
 
 def test_sync_state():
@@ -70,9 +70,9 @@ def test_dashboard_hides_local_paths_and_escapes_script_content():
     data = {
         "monthly": [{"year": 2026, "month": 1, "total_yen": 100, "item_count": 1}],
         "category_monthly": [
-            {"year": 2026, "month": 1, "category": "其他", "total_yen": 100, "item_count": 1}
+            {"year": 2026, "month": 1, "category": "その他", "total_yen": 100, "item_count": 1}
         ],
-        "categories": [{"category": "其他", "total_yen": 100, "item_count": 1}],
+        "categories": [{"category": "その他", "total_yen": 100, "item_count": 1}],
         "recent_items": [
             {
                 "id": 1,
@@ -83,7 +83,7 @@ def test_dashboard_hides_local_paths_and_escapes_script_content():
                 "title": "</script><script>alert('x')</script>",
                 "quantity": 1,
                 "item_total_yen": 100,
-                "category": "其他",
+                "category": "その他",
                 "matched_keyword": "",
             }
         ],

@@ -22,7 +22,7 @@ SYNTHETIC_ORDER_ID = re.compile(r"\b\d{3}-0{7}-0{6}\d\b")
 def tracked_files() -> list[Path]:
     try:
         result = subprocess.run(
-            ["git", "ls-files", "-z"],
+            ["git", "ls-files", "-z", "--cached", "--others", "--exclude-standard"],
             cwd=ROOT,
             check=True,
             capture_output=True,

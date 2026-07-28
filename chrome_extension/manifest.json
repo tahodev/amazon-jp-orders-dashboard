@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "Amazon JP Orders Local Capture",
+  "name": "Amazon JP Orders ローカル取込",
   "version": "0.2.0",
-  "description": "Read the logged-in Amazon.co.jp order history page and send orders to the local dashboard receiver.",
+  "description": "ログイン済みのAmazon.co.jp注文履歴を読み取り、ローカルの支出ダッシュボードへ保存します。",
   "permissions": [
     "activeTab",
     "scripting",
@@ -14,7 +14,7 @@
     "http://localhost:8776/*"
   ],
   "action": {
-    "default_title": "Amazon JP Orders",
+    "default_title": "Amazon JP Orders ローカル取込",
     "default_popup": "popup.html"
   }
 }

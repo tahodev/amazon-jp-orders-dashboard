@@ -6,8 +6,8 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
-CATEGORIES = ["食品饮料", "儿童", "美妆护肤", "药品日用品", "其他"]
-CLASSIFY_ORDER = ["儿童", "食品饮料", "美妆护肤", "药品日用品"]
+CATEGORIES = ["食品・飲料", "子ども用品", "美容・スキンケア", "医薬品・日用品", "その他"]
+CLASSIFY_ORDER = ["子ども用品", "食品・飲料", "美容・スキンケア", "医薬品・日用品"]
 
 
 @dataclass(frozen=True)
@@ -18,7 +18,7 @@ class CategoryResult:
 
 
 DEFAULT_RULES: dict[str, list[str]] = {
-    "食品饮料": [
+    "食品・飲料": [
         "食品",
         "飲料",
         "炭酸水",
@@ -45,7 +45,7 @@ DEFAULT_RULES: dict[str, list[str]] = {
         "レトルト",
         "プロテイン",
     ],
-    "儿童": [
+    "子ども用品": [
         "ベビー",
         "赤ちゃん",
         "キッズ",
@@ -65,7 +65,7 @@ DEFAULT_RULES: dict[str, list[str]] = {
         "知育",
         "玩具",
     ],
-    "美妆护肤": [
+    "美容・スキンケア": [
         "化粧",
         "コスメ",
         "美容",
@@ -82,7 +82,7 @@ DEFAULT_RULES: dict[str, list[str]] = {
         "トリートメント",
         "ヘアオイル",
     ],
-    "药品日用品": [
+    "医薬品・日用品": [
         "医薬",
         "薬",
         "サプリ",
@@ -115,7 +115,7 @@ def load_rules(path: Path) -> dict[str, list[str]]:
     data = json.loads(path.read_text(encoding="utf-8"))
     rules: dict[str, list[str]] = {}
     for category in CATEGORIES:
-        if category == "其他":
+        if category == "その他":
             continue
         values = data.get(category, DEFAULT_RULES.get(category, []))
         rules[category] = [str(item).strip() for item in values if str(item).strip()]
@@ -133,13 +133,13 @@ def save_default_rules(path: Path) -> None:
 def classify_title(title: str, rules: dict[str, list[str]]) -> CategoryResult:
     normalized = _normalize(title)
     if not normalized:
-        return CategoryResult("其他", "rule", "")
+        return CategoryResult("その他", "rule", "")
 
     for category in CLASSIFY_ORDER:
         for keyword in rules.get(category, []):
             if _keyword_matches(normalized, keyword):
                 return CategoryResult(category, "rule", keyword)
-    return CategoryResult("其他", "rule", "")
+    return CategoryResult("その他", "rule", "")
 
 
 def _normalize(value: str) -> str:
@@ -158,6 +158,6 @@ def _keyword_matches(normalized_title: str, keyword: str) -> bool:
 def category_counts(rows: list[dict[str, Any]]) -> dict[str, int]:
     out = {category: 0 for category in CATEGORIES}
     for row in rows:
-        category = str(row.get("category") or "其他")
-        out[category if category in out else "其他"] += 1
+        category = str(row.get("category") or "その他")
+        out[category if category in out else "その他"] += 1
     return out

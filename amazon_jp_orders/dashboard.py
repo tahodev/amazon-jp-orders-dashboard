@@ -10,11 +10,11 @@ from .classify import CATEGORIES
 from .db import OrdersDB
 
 PALETTE = {
-    "食品饮料": "#2f7d57",
-    "儿童": "#2b6fbb",
-    "美妆护肤": "#b65a8d",
-    "药品日用品": "#9a6a2f",
-    "其他": "#6f7785",
+    "食品・飲料": "#2f7d57",
+    "子ども用品": "#2b6fbb",
+    "美容・スキンケア": "#b65a8d",
+    "医薬品・日用品": "#9a6a2f",
+    "その他": "#6f7785",
 }
 
 
@@ -41,7 +41,7 @@ def render_dashboard(data: dict[str, Any], csv_paths: dict[str, Path]) -> str:
     items_csv = html.escape(csv_paths["items"].name)
 
     return f"""<!doctype html>
-<html lang="zh-CN">
+<html lang="ja">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -59,7 +59,7 @@ def render_dashboard(data: dict[str, Any], csv_paths: dict[str, Path]) -> str:
     * {{ box-sizing: border-box; }}
     body {{
       margin: 0;
-      font-family: "Yu Gothic UI", "Meiryo", "Microsoft YaHei", Arial, sans-serif;
+      font-family: "Yu Gothic UI", "Meiryo", Arial, sans-serif;
       background: var(--bg);
       color: var(--ink);
       line-height: 1.5;
@@ -182,39 +182,39 @@ def render_dashboard(data: dict[str, Any], csv_paths: dict[str, Path]) -> str:
 </head>
 <body>
   <header>
-    <h1>Amazon.co.jp 注文支出统计</h1>
-    <div class="meta">Generated at {html.escape(generated_at)} · local-only dashboard · CSV: data/exports/{orders_csv} / data/exports/{items_csv}</div>
+    <h1>Amazon.co.jp 注文支出ダッシュボード</h1>
+    <div class="meta">生成日時：{html.escape(generated_at)} · ローカル専用 · CSV：data/exports/{orders_csv} / data/exports/{items_csv}</div>
   </header>
   <main>
     <div class="yearbar">
-      <label class="small" for="year">年份</label>
+      <label class="small" for="year">年</label>
       <select id="year">
-        <option value="">全部年份</option>
+        <option value="">すべての年</option>
         {"".join(f'<option value="{year}">{year}</option>' for year in years)}
       </select>
     </div>
     <div class="stats">
-      <div class="stat"><div class="label">抓取商品行</div><div class="value" id="statItems">{items}</div></div>
-      <div class="stat"><div class="label">总金额</div><div class="value" id="statTotal">{_yen(total)}</div></div>
-      <div class="stat"><div class="label">月份数</div><div class="value" id="statMonths">{months}</div></div>
-      <div class="stat"><div class="label">分类</div><div class="value" id="statCategories">{len(CATEGORIES)}</div></div>
+      <div class="stat"><div class="label">商品件数</div><div class="value" id="statItems">{items}</div></div>
+      <div class="stat"><div class="label">支出合計</div><div class="value" id="statTotal">{_yen(total)}</div></div>
+      <div class="stat"><div class="label">対象月数</div><div class="value" id="statMonths">{months}</div></div>
+      <div class="stat"><div class="label">カテゴリ数</div><div class="value" id="statCategories">{len(CATEGORIES)}</div></div>
     </div>
     <div class="grid">
       <section>
-        <h2>月度支出</h2>
+        <h2>月別支出</h2>
         <div class="chart" id="monthlyChart">{monthly_chart}</div>
       </section>
       <section>
-        <h2>分类占比</h2>
+        <h2>カテゴリ別内訳</h2>
         <div class="chart" id="categoryChart">{category_chart}</div>
       </section>
     </div>
     <section>
-      <h2>商品明细</h2>
+      <h2>商品明細</h2>
       <div class="toolbar">
-        <input id="q" type="search" placeholder="搜索商品 / 订单号">
+        <input id="q" type="search" placeholder="商品名・注文番号を検索">
         <select id="cat">
-          <option value="">全部分类</option>
+          <option value="">すべてのカテゴリ</option>
           {"".join(f'<option value="{html.escape(c)}">{html.escape(c)}</option>' for c in CATEGORIES)}
         </select>
         <span class="small" id="count"></span>
@@ -222,7 +222,7 @@ def render_dashboard(data: dict[str, Any], csv_paths: dict[str, Path]) -> str:
       </div>
       <table id="items">
         <thead>
-          <tr><th>日期</th><th>订单号</th><th>商品</th><th>分类</th><th class="money">金额</th><th class="money">数量</th><th>命中</th></tr>
+          <tr><th>注文日</th><th>注文番号</th><th>商品</th><th>カテゴリ</th><th class="money">金額</th><th class="money">数量</th><th>判定キーワード</th></tr>
         </thead>
         <tbody>{item_rows}</tbody>
       </table>
@@ -233,9 +233,9 @@ def render_dashboard(data: dict[str, Any], csv_paths: dict[str, Path]) -> str:
       </div>
     </section>
     <section>
-      <h2>抓取记录</h2>
+      <h2>取込履歴</h2>
       <table>
-        <thead><tr><th>时间</th><th>范围</th><th class="money">订单</th><th class="money">商品行</th><th>来源</th></tr></thead>
+        <thead><tr><th>日時</th><th>対象期間</th><th class="money">注文件数</th><th class="money">商品件数</th><th>取得元</th></tr></thead>
         <tbody>{run_rows}</tbody>
       </table>
     </section>
@@ -276,7 +276,7 @@ def render_dashboard(data: dict[str, Any], csv_paths: dict[str, Path]) -> str:
       for (const row of matched.slice(start, start + pageSize)) {{
         row.style.display = '';
       }}
-      count.textContent = `${{matched.length}} / ${{rows.length}} 行`;
+      count.textContent = `${{matched.length}} / ${{rows.length}} 件`;
       pageInfo.textContent = `${{currentPage}} / ${{maxPage}}`;
       prevPage.disabled = currentPage <= 1;
       nextPage.disabled = currentPage >= maxPage;
@@ -299,7 +299,7 @@ def render_dashboard(data: dict[str, Any], csv_paths: dict[str, Path]) -> str:
       const total = catRows.reduce((sum, row) => sum + Number(row.total_yen || 0), 0);
       const categories = new Map();
       for (const row of catRows) {{
-        const key = row.category || '其他';
+        const key = row.category || 'その他';
         const prev = categories.get(key) || {{ category: key, total_yen: 0, item_count: 0 }};
         prev.total_yen += Number(row.total_yen || 0);
         prev.item_count += Number(row.item_count || 0);
@@ -315,7 +315,7 @@ def render_dashboard(data: dict[str, Any], csv_paths: dict[str, Path]) -> str:
     function renderMonthly(catRows) {{
       const labels = Array.from(new Set(catRows.map(row => `${{row.year}}-${{String(row.month).padStart(2, '0')}}`))).sort();
       if (!labels.length) {{
-        monthlyChart.innerHTML = '<div class="small">没有该年份的数据。</div>';
+        monthlyChart.innerHTML = '<div class="small">この年のデータはありません。</div>';
         return;
       }}
       const palette = {json.dumps(PALETTE, ensure_ascii=False)};
@@ -335,7 +335,7 @@ def render_dashboard(data: dict[str, Any], csv_paths: dict[str, Path]) -> str:
           if (amount <= 0) continue;
           const h = Math.max(2, amount / maxTotal * chartH);
           y -= h;
-          svg += `<rect x="${{x.toFixed(1)}}" y="${{y.toFixed(1)}}" width="${{barW.toFixed(1)}}" height="${{h.toFixed(1)}}" fill="${{palette[category] || palette['其他']}}"><title>${{label}} ${{category}} ${{yen(amount)}}</title></rect>`;
+          svg += `<rect x="${{x.toFixed(1)}}" y="${{y.toFixed(1)}}" width="${{barW.toFixed(1)}}" height="${{h.toFixed(1)}}" fill="${{palette[category] || palette['その他']}}"><title>${{label}} ${{category}} ${{yen(amount)}}</title></rect>`;
         }}
         svg += `<text class="bar-label" x="${{(x + barW / 2).toFixed(1)}}" y="${{height-22}}" text-anchor="middle">${{label.slice(5)}}</text>`;
         svg += `<text class="bar-label" x="${{(x + barW / 2).toFixed(1)}}" y="${{Math.max(14, y-5).toFixed(1)}}" text-anchor="middle">${{shortYen(totals[label])}}</text>`;
@@ -345,7 +345,7 @@ def render_dashboard(data: dict[str, Any], csv_paths: dict[str, Path]) -> str:
     }}
     function renderCategories(rows, total) {{
       if (!total) {{
-        categoryChart.innerHTML = '<div class="small">没有该年份的数据。</div>';
+        categoryChart.innerHTML = '<div class="small">この年のデータはありません。</div>';
         return;
       }}
       const palette = {json.dumps(PALETTE, ensure_ascii=False)};
@@ -358,7 +358,7 @@ def render_dashboard(data: dict[str, Any], csv_paths: dict[str, Path]) -> str:
             <span>${{row.item_count}} 件</span>
           </div>
           <div style="height:12px;background:#eee7da;border-radius:999px;overflow:hidden">
-            <div style="width:${{pct.toFixed(2)}}%;height:100%;background:${{palette[row.category] || palette['其他']}}"></div>
+            <div style="width:${{pct.toFixed(2)}}%;height:100%;background:${{palette[row.category] || palette['その他']}}"></div>
           </div>
         </div>`;
       }}).join('');
@@ -374,7 +374,7 @@ def render_dashboard(data: dict[str, Any], csv_paths: dict[str, Path]) -> str:
         const row = select.closest('tr');
         const itemId = Number(row.dataset.itemId || 0);
         const category = select.value;
-        saveStatus.textContent = '保存分类...';
+        saveStatus.textContent = 'カテゴリを保存しています...';
         select.disabled = true;
         try {{
           const res = await fetch('/api/item-category', {{
@@ -384,10 +384,10 @@ def render_dashboard(data: dict[str, Any], csv_paths: dict[str, Path]) -> str:
           }});
           const data = await res.json();
           if (!data.ok) throw new Error(data.error || 'save failed');
-          saveStatus.textContent = `已保存，同名商品更新 ${{data.affected_rows || 1}} 行`;
+          saveStatus.textContent = `保存しました。同名商品 ${{data.affected_rows || 1}}件を更新しました`;
           setTimeout(() => location.reload(), 650);
         }} catch (err) {{
-          saveStatus.textContent = `保存失败: ${{err.message || err}}`;
+          saveStatus.textContent = `保存に失敗しました：${{err.message || err}}`;
           select.disabled = false;
         }}
       }});
@@ -403,7 +403,7 @@ def _monthly_chart(data: dict[str, Any]) -> str:
     rows = data["category_monthly"]
     labels = sorted({f"{int(r['year'])}-{int(r['month']):02d}" for r in rows})
     if not labels:
-        return "<div class='small'>还没有数据。先启动接收器并用 Chrome 扩展抓取注文履歴。</div>"
+        return "<div class='small'>データがありません。ローカル受信サービスを起動し、Chrome拡張機能から注文履歴を取り込んでください。</div>"
     totals = {
         label: sum(int(r.get("total_yen") or 0) for r in rows if f"{int(r['year'])}-{int(r['month']):02d}" == label)
         for label in labels
@@ -446,10 +446,10 @@ def _monthly_chart(data: dict[str, Any]) -> str:
 def _category_chart(rows: list[dict[str, Any]]) -> str:
     total = sum(int(row.get("total_yen") or 0) for row in rows)
     if total <= 0:
-        return "<div class='small'>还没有可汇总金额。</div>"
+        return "<div class='small'>集計できる金額データがありません。</div>"
     bars = []
     for row in rows:
-        category = str(row.get("category") or "其他")
+        category = str(row.get("category") or "その他")
         amount = int(row.get("total_yen") or 0)
         item_count = int(row.get("item_count") or 0)
         pct = amount / total * 100
@@ -460,7 +460,7 @@ def _category_chart(rows: list[dict[str, Any]]) -> str:
                 <span>{item_count} 件</span>
               </div>
               <div style="height:12px;background:#eee7da;border-radius:999px;overflow:hidden">
-                <div style="width:{pct:.2f}%;height:100%;background:{PALETTE.get(category, PALETTE['其他'])}"></div>
+                <div style="width:{pct:.2f}%;height:100%;background:{PALETTE.get(category, PALETTE['その他'])}"></div>
               </div>
             </div>"""
         )
@@ -468,7 +468,7 @@ def _category_chart(rows: list[dict[str, Any]]) -> str:
 
 
 def _item_row(row: dict[str, Any]) -> str:
-    category = str(row.get("category") or "其他")
+    category = str(row.get("category") or "その他")
     title = html.escape(str(row.get("title") or ""))
     year = str(row.get("year") or "")
     item_id = int(row.get("id") or 0)
