@@ -1,0 +1,8 @@
+{
+  "name": "amazon-jp-orders-dashboard-fixture-tests",
+  "private": true,
+  "description": "Dev-only dependencies for the capture_core synthetic-fixture regression test (issue #4).",
+  "devDependencies": {
+    "jsdom": "^24.1.0"
+  }
+}

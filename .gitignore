@@ -22,3 +22,6 @@ build/
 *.key
 .DS_Store
 Thumbs.db
+
+# Node (fixture regression test, issue #4)
+node_modules/
